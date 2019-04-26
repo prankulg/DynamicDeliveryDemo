@@ -1,1 +1,1 @@
-include ':app', ':library1', ':dynamic_feature'
+include ':app', ':library1', ':dynamic_feature', ':dynamic_feature1', ':dynamic_feature2'

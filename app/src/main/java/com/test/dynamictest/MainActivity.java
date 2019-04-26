@@ -2,8 +2,8 @@ package com.test.dynamictest;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,21 +32,29 @@ public class MainActivity extends AppCompatActivity {
         btnTap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"button clicked");
+                Log.i(TAG, "button clicked");
                 CommonDynamicInstaller mInstaller = new CommonDynamicInstaller(context);
 
                 if (mInstaller.checkForInstallation(DYNAMIC_MODULE_NAME)) {
-                    Log.i(TAG,"module already installed");
+                    Log.i(TAG, "module already installed");
                     Intent intent = new Intent();
                     intent.setClassName(context, DYNAMIC_MODULE_ACTIVITY);
                     context.startActivity(intent);
                 } else {
-                    Log.i(TAG,"module not already installed");
+                    Log.i(TAG, "module not already installed");
                     Intent intent = new Intent(context, CommonDynamicLoaderActivity.class);
                     intent.putExtra(EXTRA_INIT_ACTIVITY, DYNAMIC_MODULE_ACTIVITY);
                     intent.putExtra(EXTRA_INIT_MODULE, DYNAMIC_MODULE_NAME);
                     context.startActivity(intent);
                 }
+            }
+        });
+
+        findViewById(R.id.btn_launch_download_modules_controller).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
+                startActivity(intent);
             }
         });
     }
