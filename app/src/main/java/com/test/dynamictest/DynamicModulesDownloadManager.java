@@ -41,6 +41,7 @@ public class DynamicModulesDownloadManager {
         modulesArrayList.add(getModuleItem("dynamic_feature"));
         modulesArrayList.add(getModuleItem("dynamic_feature1"));
         modulesArrayList.add(getModuleItem("dynamic_feature2"));
+        modulesArrayList.add(getModuleItem("dynamic_feature3"));
 
         splitInstallStateUpdatedListener = new SplitInstallStateUpdatedListener() {
             @Override
@@ -68,7 +69,7 @@ public class DynamicModulesDownloadManager {
         onSuccessListener = new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                toastAndLog("onSuccess: " + o.toString());
+                toastAndLog("onSuccess: ");
             }
         };
 
@@ -149,7 +150,8 @@ public class DynamicModulesDownloadManager {
                 for (ModuleItem moduleItem : modulesArrayList) {
                     list.add(moduleItem.getName());
                 }
-                splitInstallManager.deferredInstall(list);
+                splitInstallManager.deferredInstall(list).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+                splitInstallManager.registerListener(splitInstallStateUpdatedListener);
             } else {
                 SplitInstallRequest.Builder requestBuilder = SplitInstallRequest.newBuilder();
                 for (ModuleItem moduleItem : modulesArrayList) {
@@ -173,7 +175,8 @@ public class DynamicModulesDownloadManager {
                 if (isDefferedInstallEnabled()) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add(name);
-                    splitInstallManager.deferredInstall(list);
+                    splitInstallManager.deferredInstall(list).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+                    splitInstallManager.registerListener(splitInstallStateUpdatedListener);
                 } else {
                     SplitInstallRequest request = SplitInstallRequest.newBuilder()
                             .addModule(name)
@@ -197,7 +200,7 @@ public class DynamicModulesDownloadManager {
             }
 
             SplitInstallManager splitInstallManager = getSplitInstallManager(mContext);
-            splitInstallManager.deferredUninstall(list);
+            splitInstallManager.deferredUninstall(list).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
         } catch (Exception e) {
             e.printStackTrace();
         }

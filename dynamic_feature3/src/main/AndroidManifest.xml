@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.paytm.dynamic_feature3">
+
+    <dist:module
+        dist:instant="false"
+        dist:onDemand="true"
+        dist:title="@string/title_dynamic_feature3">
+        <dist:fusing dist:include="true" />
+    </dist:module>
+
+    <application android:hasCode="false">
+        <activity android:name=".DynamicInitActivityF3"></activity>
+    </application>
+</manifest>
+
