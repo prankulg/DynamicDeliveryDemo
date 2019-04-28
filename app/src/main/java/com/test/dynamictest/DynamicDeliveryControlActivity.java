@@ -37,8 +37,16 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity {
         toggleDeferredInstall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO: 26/04/19 Save in preferences
                 DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setDefferedInstallEnabled(isChecked);
+            }
+        });
+
+        Switch toggleUserConsentHandlingEnabled = findViewById(R.id.sw_user_consent_handling_enabled);
+        toggleUserConsentHandlingEnabled.setChecked(DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).isREQUIRES_USER_CONFIRMATION_errorHandleEnabled());
+        toggleUserConsentHandlingEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setREQUIRES_USER_CONFIRMATION_errorHandleEnabled(isChecked);
             }
         });
 

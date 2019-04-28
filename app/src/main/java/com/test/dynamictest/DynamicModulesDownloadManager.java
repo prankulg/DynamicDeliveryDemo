@@ -2,7 +2,6 @@ package com.test.dynamictest;
 
 import android.content.Context;
 import android.content.IntentSender;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,7 +12,6 @@ import com.google.android.play.core.splitinstall.SplitInstallManagerFactory;
 import com.google.android.play.core.splitinstall.SplitInstallRequest;
 import com.google.android.play.core.splitinstall.SplitInstallSessionState;
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener;
-import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode;
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus;
 import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
@@ -29,15 +27,18 @@ public class DynamicModulesDownloadManager {
 
     private ArrayList<ModuleItem> modulesArrayList = new ArrayList<>();
     private boolean isDefferedInstallEnabled;
+    private boolean isREQUIRES_USER_CONFIRMATION_errorHandleEnabled = true;
     private Context mContext;
     private SplitInstallStateUpdatedListener splitInstallStateUpdatedListener;
     private OnSuccessListener onSuccessListener;
     private OnFailureListener onFailureListener;
+    private SplitInstallManager mSplitInstallManager;
 
     private static DynamicModulesDownloadManager sInstance;
 
     private DynamicModulesDownloadManager(Context context) {
         mContext = context;
+        mSplitInstallManager = SplitInstallManagerFactory.create(context);
         modulesArrayList.add(getModuleItem("dynamic_feature"));
         modulesArrayList.add(getModuleItem("dynamic_feature1"));
         modulesArrayList.add(getModuleItem("dynamic_feature2"));
@@ -53,10 +54,12 @@ public class DynamicModulesDownloadManager {
                         log("Start downloading...");
                         break;
                     case SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION:
-                        try {
-                            mContext.startIntentSender(splitInstallSessionState.resolutionIntent().getIntentSender(), null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
+                        if (isREQUIRES_USER_CONFIRMATION_errorHandleEnabled){
+                            try {
+                                mContext.startIntentSender(splitInstallSessionState.resolutionIntent().getIntentSender(), null, 0, 0, 0);
+                            } catch (IntentSender.SendIntentException e) {
+                                e.printStackTrace();
+                            }
                         }
                         break;
                     case SplitInstallSessionStatus.INSTALLED:
@@ -107,13 +110,14 @@ public class DynamicModulesDownloadManager {
                             toastAndLog("checkForActiveDownloads - onSuccess: status: " + state.status() + " sessionId: " + state.sessionId());
                             if (state.status() == SplitInstallSessionStatus.DOWNLOADING) {
                                 // Cancel the request, or request a deferred installation.
-                                splitInstallManager.cancelInstall(state.sessionId()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        toastAndLog("cancelInstall - onSuccess: ");
-                                    }
-                                });
                             }
+                            // TODO: 2019-04-29 Add only intended error codes here
+                            splitInstallManager.cancelInstall(state.sessionId()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    toastAndLog("cancelInstall - onSuccess: ");
+                                }
+                            });
                         }
                     }
                 });
@@ -229,7 +233,7 @@ public class DynamicModulesDownloadManager {
     }
 
     public SplitInstallManager getSplitInstallManager(Context context) {
-        return SplitInstallManagerFactory.create(context);
+        return mSplitInstallManager;
     }
 
     public boolean isDefferedInstallEnabled() {
@@ -238,6 +242,14 @@ public class DynamicModulesDownloadManager {
 
     public void setDefferedInstallEnabled(boolean isChecked) {
         isDefferedInstallEnabled = isChecked;
+    }
+
+    public boolean isREQUIRES_USER_CONFIRMATION_errorHandleEnabled() {
+        return isREQUIRES_USER_CONFIRMATION_errorHandleEnabled;
+    }
+
+    public void setREQUIRES_USER_CONFIRMATION_errorHandleEnabled(boolean REQUIRES_USER_CONFIRMATION_errorHandleEnabled) {
+        isREQUIRES_USER_CONFIRMATION_errorHandleEnabled = REQUIRES_USER_CONFIRMATION_errorHandleEnabled;
     }
 
     private void toastAndLog(String message) {

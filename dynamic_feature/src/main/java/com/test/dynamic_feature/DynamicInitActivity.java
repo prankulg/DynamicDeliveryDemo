@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
-import com.test.library1.LibraryActivity;
 
 public class DynamicInitActivity extends AppCompatActivity {
 
@@ -21,7 +20,7 @@ public class DynamicInitActivity extends AppCompatActivity {
         Log.i(TAG,"inside DynamicInitActivity");
 
 
-        startActivity(new Intent(this, LibraryActivity.class));
+//        startActivity(new Intent(this, LibraryActivity.class));
     }
 
     @Override
