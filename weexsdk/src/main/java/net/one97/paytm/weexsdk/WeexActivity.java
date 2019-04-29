@@ -37,15 +37,8 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String action = getIntent().getStringExtra("action");
-        if (action.equals("weex_load")) {
-            initSDK(this);
-            loadUrl("", this);
-
-        } else if (action.equals("weex_init")) {
-
-        }
-
+        initSDK(this);
+        loadUrl("", this);
     }
 
 
