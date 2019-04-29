@@ -1,6 +1,8 @@
 package com.test.dynamictest;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,6 +27,10 @@ import java.util.Set;
 public class DynamicModulesDownloadManager {
     private static final String TAG = "PlayCore";
 
+    public static String EXTRA_INIT_ACTIVITY = "EXTRA_INIT_ACTIVITY";
+    public static String EXTRA_INIT_MODULE = "EXTRA_INIT_MODULE";
+    private static boolean active = false;
+
     private ArrayList<ModuleItem> modulesArrayList = new ArrayList<>();
     private boolean isDefferedInstallEnabled;
     private boolean isREQUIRES_USER_CONFIRMATION_errorHandleEnabled = true;
@@ -39,10 +45,10 @@ public class DynamicModulesDownloadManager {
     private DynamicModulesDownloadManager(Context context) {
         mContext = context;
         mSplitInstallManager = SplitInstallManagerFactory.create(context);
-        modulesArrayList.add(getModuleItem("dynamic_feature"));
-        modulesArrayList.add(getModuleItem("dynamic_feature1"));
-        modulesArrayList.add(getModuleItem("dynamic_feature2"));
-        modulesArrayList.add(getModuleItem("dynamic_feature3"));
+        modulesArrayList.add(new ModuleItem("dynamic_feature"));
+        modulesArrayList.add(new ModuleItem("dynamic_feature1"));
+        modulesArrayList.add(new ModuleItem("dynamic_feature2"));
+        modulesArrayList.add(new ModuleItem("dynamic_feature3"));
 
         splitInstallStateUpdatedListener = new SplitInstallStateUpdatedListener() {
             @Override
@@ -108,16 +114,16 @@ public class DynamicModulesDownloadManager {
                         // Check for active sessions.
                         for (SplitInstallSessionState state : task.getResult()) {
                             toastAndLog("checkForActiveDownloads - onSuccess: status: " + state.status() + " sessionId: " + state.sessionId());
-                            if (state.status() == SplitInstallSessionStatus.DOWNLOADING) {
-                                // Cancel the request, or request a deferred installation.
-                            }
                             // TODO: 2019-04-29 Add only intended error codes here
-                            splitInstallManager.cancelInstall(state.sessionId()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    toastAndLog("cancelInstall - onSuccess: ");
-                                }
-                            });
+                            if (state.status() == SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION) {
+                                // Cancel the request, or request a deferred installation.
+                                splitInstallManager.cancelInstall(state.sessionId()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        toastAndLog("cancelInstall - onSuccess: ");
+                                    }
+                                });
+                            }
                         }
                     }
                 });
@@ -225,13 +231,6 @@ public class DynamicModulesDownloadManager {
         }
     }
 
-    private ModuleItem getModuleItem(String name) {
-        ModuleItem moduleItem = new ModuleItem();
-        moduleItem.setName(name);
-        moduleItem.setInstalled(false);
-        return moduleItem;
-    }
-
     public SplitInstallManager getSplitInstallManager(Context context) {
         return mSplitInstallManager;
     }
@@ -259,5 +258,25 @@ public class DynamicModulesDownloadManager {
 
     private void log(String message) {
         Log.i(TAG, message);
+    }
+
+    public void loadAndLaunchModule(Activity activity, String moduleName, String moduleActivity){
+        if (isInstalled(moduleName)) {
+            log("Module already installed");
+            Intent intent = new Intent();
+            intent.setClassName(activity, moduleActivity);
+            activity.startActivity(intent);
+        } else {
+            log("Module not already installed");
+            Intent intent = new Intent(activity, CommonDynamicLoaderActivity.class);
+            intent.putExtra(EXTRA_INIT_ACTIVITY, moduleActivity);
+            intent.putExtra(EXTRA_INIT_MODULE, moduleName);
+            activity.startActivity(intent);
+        }
+    }
+
+    private boolean isInstalled(String moduleName) {
+        Set<String> installedModules = mSplitInstallManager.getInstalledModules();
+        return installedModules.contains(moduleName);
     }
 }

@@ -7,6 +7,16 @@ public class ModuleItem {
     private String name;
     private boolean isInstalled;
 
+    public ModuleItem(String name, boolean isInstalled) {
+        this.name = name;
+        this.isInstalled = isInstalled;
+    }
+
+    public ModuleItem(String name) {
+        this.name = name;
+        this.isInstalled = false;
+    }
+
     public String getName() {
         return name;
     }
