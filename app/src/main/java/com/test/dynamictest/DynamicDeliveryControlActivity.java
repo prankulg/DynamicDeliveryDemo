@@ -1,19 +1,29 @@
 package com.test.dynamictest;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
 
+import java.io.Serializable;
+import java.util.HashSet;
+
 public class DynamicDeliveryControlActivity extends AppCompatActivity {
+    private static final String TAG = "PlayCore";
     private ModulesAdapter modulesAdapter;
 
     @Override
@@ -38,15 +48,6 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setDefferedInstallEnabled(isChecked);
-            }
-        });
-
-        Switch toggleUserConsentHandlingEnabled = findViewById(R.id.sw_user_consent_handling_enabled);
-        toggleUserConsentHandlingEnabled.setChecked(DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).isREQUIRES_USER_CONFIRMATION_errorHandleEnabled());
-        toggleUserConsentHandlingEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setREQUIRES_USER_CONFIRMATION_errorHandleEnabled(isChecked);
             }
         });
 
@@ -85,5 +86,40 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         SplitCompat.install(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(DynamicModulesDownloadManager.INTENT_ACTION_DFM_MODULE_INSTALLED));
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String status = intent.getStringExtra(DynamicModulesDownloadManager.EXTRA_MODULE_STATUS);
+            toastAndLog("Broadcast listened to calling activity: Status: " + status);
+
+            Serializable serializable = intent.getSerializableExtra(DynamicModulesDownloadManager.EXTRA_MODULE_NAMES);
+            if (serializable instanceof HashSet){
+                HashSet<String> modules = (HashSet<String>) serializable;
+                toastAndLog(modules.toString());
+            }
+        }
+    };
+
+    private void toastAndLog(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        log(message);
+    }
+
+    private void log(String message) {
+        Log.i(TAG, message);
     }
 }
