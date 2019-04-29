@@ -1,10 +1,22 @@
 <resources>
     <string name="app_name">DynamicTest</string>
     <string name="title_dynamic_feature">dynamic_feature</string>
+    <string name="title_dynamic_feature1">dynamic_feature1</string>
+    <string name="title_dynamic_feature2">dynamic_feature2</string>
+    <string name="title_dynamic_feature3">dynamic_feature3</string>
+    <string name="title_dynamic_feature4">dynamic_feature4</string>
+    <string name="title_dynamic_feature5">dynamic_feature5</string>
+    <string name="title_dynamic_feature6">dynamic_feature6</string>
+    <string name="title_dynamic_feature7">dynamic_feature7</string>
+    <string name="title_dynamic_feature8">dynamic_feature8</string>
 
     <string name="dynamic_hoho_progress">Download in progress... %s</string>
     <string name="dynamic_hoho_progress_complete">Download Complete</string>
     <string name="dynamic_hoho_progress_failed">Download Failed</string>
+
     <string name="title_weexsdk">Module Title</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <string name="title_activity_dynamic_delivery_control">DynamicDeliveryControlActivity</string>
+
 </resources>

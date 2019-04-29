@@ -7,8 +7,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 13
-        versionName "1.10"
+        versionCode 35
+        versionName "1.35"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -18,10 +18,11 @@ android {
         }
     }
 
-
-    dynamicFeatures = [":dynamic_feature", ":weexsdk"]
-
-
+    dynamicFeatures = [":dynamic_feature", ":weexsdk", ":dynamic_feature1", ":dynamic_feature2", ":dynamic_feature3", ]
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -34,11 +35,12 @@ dependencies {
 
 
 
-    api "com.google.android.play:core:1.4.0"
+    api "com.google.android.play:core:1.4.1"
     implementation("com.airbnb.android:lottie:2.3.1") {
         exclude group: 'com.android.support'
     }
 
+    implementation 'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
