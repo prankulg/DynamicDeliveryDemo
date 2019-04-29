@@ -1,6 +1,5 @@
 package com.test.dynamictest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,14 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import static com.test.dynamictest.CommonDynamicLoaderActivity.EXTRA_INIT_ACTIVITY;
-import static com.test.dynamictest.CommonDynamicLoaderActivity.EXTRA_INIT_MODULE;
-
 public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "InstallDynamicModule";
 
-   private static String DYNAMIC_MODULE_ACTIVITY = "com.test.dynamic_feature.DynamicInitActivity";
+    private static String DYNAMIC_MODULE_ACTIVITY = "com.test.dynamic_feature.DynamicInitActivity";
     private static String DYNAMIC_MODULE_WEEX_ACTIVITY = "net.one97.paytm.weexsdk.WeexActivity";
 
     private static String DYNAMIC_MODULE_NAME = "dynamic_feature";
@@ -26,12 +22,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DynamicModuleInstaller dynamicModuleInstaller = new DynamicModuleInstaller(MainActivity.this);
+
         Button btnTap = findViewById(R.id.btn_tap);
         btnTap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                DynamicModulesDownloadManager.getInstance(MainActivity.this).loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
+                dynamicModuleInstaller.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
+            }
+        });
+
+        Button btnweex = findViewById(R.id.btn_weex);
+        btnweex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "button clicked");
+                dynamicModuleInstaller.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
 
@@ -40,16 +47,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
                 startActivity(intent);
-            }
-        });
-
-
-        Button btnweex = findViewById(R.id.btn_weex);
-        btnweex.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG,"button clicked");
-                DynamicModulesDownloadManager.getInstance(MainActivity.this).loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
     }
