@@ -25,3 +25,7 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+ext {
+    projectWeexSDKVersion = '0.20.0.2@aar'
+}
+

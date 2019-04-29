@@ -5,4 +5,6 @@
     <string name="dynamic_hoho_progress">Download in progress... %s</string>
     <string name="dynamic_hoho_progress_complete">Download Complete</string>
     <string name="dynamic_hoho_progress_failed">Download Failed</string>
+    <string name="title_weexsdk">Module Title</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

@@ -15,8 +15,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "InstallDynamicModule";
 
-    private static String DYNAMIC_MODULE_ACTIVITY = "com.test.dynamic_feature.DynamicInitActivity";
-    private static String DYNAMIC_MODULE_NAME = "dynamic_feature";
+//    private static String DYNAMIC_MODULE_ACTIVITY = "com.test.dynamic_feature.DynamicInitActivity";
+    private static String DYNAMIC_MODULE_ACTIVITY = "net.one97.paytm.weexsdk.WeexActivity";
+
+    private static String DYNAMIC_MODULE_NAME = "weexsdk";
 
     private Context context;
 
@@ -39,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG,"module already installed");
                     Intent intent = new Intent();
                     intent.setClassName(context, DYNAMIC_MODULE_ACTIVITY);
+                    intent.putExtra("action","weex_load");
                     context.startActivity(intent);
                 } else {
                     Log.i(TAG,"module not already installed");
                     Intent intent = new Intent(context, CommonDynamicLoaderActivity.class);
                     intent.putExtra(EXTRA_INIT_ACTIVITY, DYNAMIC_MODULE_ACTIVITY);
                     intent.putExtra(EXTRA_INIT_MODULE, DYNAMIC_MODULE_NAME);
+                    intent.putExtra("action","weex_load");
                     context.startActivity(intent);
                 }
             }
