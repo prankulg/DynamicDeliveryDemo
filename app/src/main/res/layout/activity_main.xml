@@ -24,4 +24,15 @@
         android:layout_height="wrap_content"
         android:text="Tap On Me Please"/>
 
+
+
+
+    <Button
+        android:id="@+id/btn_weex"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_tap"
+        android:layout_marginTop="16dp"
+        android:text="Weex SDK"/>
 </RelativeLayout>

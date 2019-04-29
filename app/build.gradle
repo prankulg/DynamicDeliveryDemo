@@ -19,7 +19,7 @@ android {
     }
 
 
-    dynamicFeatures = [":weexsdk"]
+    dynamicFeatures = [":dynamic_feature", ":weexsdk"]
 
 
 }
