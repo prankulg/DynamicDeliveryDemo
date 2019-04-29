@@ -3,19 +3,18 @@ package net.one97.paytm.weexsdk;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.play.core.splitcompat.SplitCompat;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.InitConfig;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
-import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXFileUtils;
 
 import java.util.HashMap;
@@ -25,22 +24,19 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("POC", "WeexSdkInitActivity");
-
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.weexsdk_activity_main);
 
-        InitConfig config = new InitConfig.Builder()
-                .build();
-        WXSDKEngine.initialize(this.getApplication(), config);
-
-        super.onCreate(savedInstanceState);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Log.i("POC", "WeexSdkInitActivity");
+        InitConfig config = new InitConfig.Builder().build();
+        WXSDKEngine.initialize(getApplication(), config);
 
         initSDK(this);
         loadUrl("", this);
     }
-
 
     public void initSDK(Context context) {
         mWXSDKInstance = new WXSDKInstance(context);
@@ -48,14 +44,16 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     }
 
     public void loadUrl(String url, final Context context) {
-
+        Log.i("POC", "" + WXEnvironment.sApplication);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 HashMap<String, Object> map = new HashMap<>();
                 Log.i("POC", "before render");
+                Log.i("POC", "" + WXEnvironment.sApplication);
                 mWXSDKInstance.render("pdp", WXFileUtils.loadFileOrAsset("test.js", context.getApplicationContext()), null, null, WXRenderStrategy.APPEND_ASYNC);
                 Log.i("POC", "after render");
+                Log.i("POC", "" + WXEnvironment.sApplication);
 
             }
         }, 3000);
@@ -127,4 +125,9 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         }
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        SplitCompat.install(this);
+    }
 }
