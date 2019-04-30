@@ -27,8 +27,6 @@ import com.google.android.play.core.tasks.Task;
 public class CommonDynamicLoaderActivity extends AppCompatActivity implements SplitInstallStateUpdatedListener, OnCompleteListener, OnFailureListener, OnSuccessListener {
 
     private static String TAG = "CommonDynamicLoaderActivity";
-    public static String EXTRA_INIT_ACTIVITY = "EXTRA_INIT_ACTIVITY";
-    public static String EXTRA_INIT_MODULE = "EXTRA_INIT_MODULE";
     private static boolean active = false;
 
     private LottieAnimationView mainLoaderView;
@@ -49,8 +47,8 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Sp
         mContext = CommonDynamicLoaderActivity.this;
         mInstallManager = SplitInstallManagerFactory.create(this);
         resultIntent = getIntent();
-        initActivity = resultIntent.getStringExtra(EXTRA_INIT_ACTIVITY);
-        initModule = resultIntent.getStringExtra(EXTRA_INIT_MODULE);
+        initActivity = resultIntent.getStringExtra(DynamicModuleInstaller.EXTRA_INIT_ACTIVITY);
+        initModule = resultIntent.getStringExtra(DynamicModuleInstaller.EXTRA_INIT_MODULE);
 
         //initiating module installation
         installModule();

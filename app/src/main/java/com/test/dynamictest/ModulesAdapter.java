@@ -16,10 +16,12 @@ import java.util.ArrayList;
 public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private ArrayList<ModuleItem> mArrayList;
+    private ItemClickListener mItemClickListener;
 
-    public ModulesAdapter(Context context, ArrayList<ModuleItem> modulesArrayList) {
+    public ModulesAdapter(Context context, ArrayList<ModuleItem> modulesArrayList, ItemClickListener itemClickListener) {
         mContext = context;
         mArrayList = modulesArrayList;
+        mItemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -38,11 +40,7 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mvh.swToggleInstall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    DynamicModulesDownloadManager.getInstance(mContext).installModule(mvh.tvModuleName.getText().toString());
-                } else {
-                    DynamicModulesDownloadManager.getInstance(mContext).unInstallModule(mvh.tvModuleName.getText().toString());
-                }
+                mItemClickListener.onCheckedChangeListener(isChecked, mvh.tvModuleName.getText().toString());
             }
         });
     }
@@ -66,6 +64,10 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvModuleName = itemView.findViewById(R.id.tv_module_name);
             swToggleInstall = itemView.findViewById(R.id.sw_toggle_install);
         }
+    }
+
+    public interface ItemClickListener {
+        void onCheckedChangeListener(boolean isChecked, String moduleName);
     }
 }
 

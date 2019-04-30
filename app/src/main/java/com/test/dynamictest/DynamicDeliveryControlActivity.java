@@ -6,15 +6,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
 
-public class DynamicDeliveryControlActivity extends AppCompatActivity {
+import java.util.HashSet;
+
+public class DynamicDeliveryControlActivity extends AppCompatActivity implements DynamicModuleInstaller.Listener {
+    private static final String TAG = "PlayCore";
     private ModulesAdapter modulesAdapter;
+    private DynamicModuleInstaller dynamicModuleInstaller;
+    private boolean isDefferedInstallEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,47 +36,66 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rv_modules);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
-        modulesAdapter = new ModulesAdapter(this, DynamicModulesDownloadManager.getInstance(this).getModulesArrayList());
+
+        dynamicModuleInstaller = new DynamicModuleInstaller(this);
+        modulesAdapter = new ModulesAdapter(this, dynamicModuleInstaller.getModulesArrayList(), new ModulesAdapter.ItemClickListener() {
+            @Override
+            public void onCheckedChangeListener(boolean isChecked, String moduleName) {
+                if (isChecked) {
+                    if (isDefferedInstallEnabled){
+                        dynamicModuleInstaller.deferredInstall(moduleName);
+                    } else {
+                        dynamicModuleInstaller.startInstall(moduleName);
+                    }
+                } else {
+                    dynamicModuleInstaller.deferredUninstall(moduleName);
+                }
+            }
+        });
         recyclerView.setAdapter(modulesAdapter);
 
         Switch toggleDeferredInstall = findViewById(R.id.sw_toggle_deffered_install);
-        toggleDeferredInstall.setChecked(DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).isDefferedInstallEnabled());
+        toggleDeferredInstall.setChecked(isDefferedInstallEnabled);
         toggleDeferredInstall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setDefferedInstallEnabled(isChecked);
-            }
-        });
-
-        Switch toggleUserConsentHandlingEnabled = findViewById(R.id.sw_user_consent_handling_enabled);
-        toggleUserConsentHandlingEnabled.setChecked(DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).isREQUIRES_USER_CONFIRMATION_errorHandleEnabled());
-        toggleUserConsentHandlingEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).setREQUIRES_USER_CONFIRMATION_errorHandleEnabled(isChecked);
+                isDefferedInstallEnabled = isChecked;
             }
         });
 
         findViewById(R.id.btn_toggle_install_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).installAllModules();
+                if (isDefferedInstallEnabled){
+                    dynamicModuleInstaller.deferredInstallAll();
+                } else {
+                    dynamicModuleInstaller.startInstallAll();
+                }
             }
         });
 
         findViewById(R.id.btn_refresh_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modulesAdapter.setNewData(DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).getModulesArrayList());
+                modulesAdapter.setNewData(dynamicModuleInstaller.getModulesArrayList());
             }
         });
 
         findViewById(R.id.btn_toggle_uninstall_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DynamicModulesDownloadManager.getInstance(DynamicDeliveryControlActivity.this).unInstallAllModules();
+                dynamicModuleInstaller.deferredUninstallAll();
             }
         });
+    }
+
+    private void toastAndLog(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        log(message);
+    }
+
+    private void log(String message) {
+        Log.i(TAG, message);
     }
 
     @Override
@@ -85,5 +111,37 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         SplitCompat.install(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dynamicModuleInstaller.unRegisterListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dynamicModuleInstaller.registerListener(this);
+    }
+
+    @Override
+    public void onDownloading(int downloadedPercentage) {
+        toastAndLog("Downloading... " + downloadedPercentage + "%");
+    }
+
+    @Override
+    public void onInstalled(HashSet<String> modules) {
+        toastAndLog("Installed: " + modules.toString());
+    }
+
+    @Override
+    public void onFailed(int splitInstallErrorCode) {
+        toastAndLog("Failed: " + splitInstallErrorCode);
+    }
+
+    @Override
+    public void onCancelled() {
+        toastAndLog("onCancelled");
     }
 }
