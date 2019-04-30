@@ -50,6 +50,8 @@ public class DynamicModuleInstaller {
         modulesArrayList.add(new ModuleItem("dynamic_feature3"));
 
         initListeners();
+
+
     }
 
     private void initListeners() {

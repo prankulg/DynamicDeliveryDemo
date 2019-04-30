@@ -1,11 +1,16 @@
 package com.test.dynamictest;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.test.dynamictest.weexsdk.WeexDeeplinkHandler;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,12 +38,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnweex = findViewById(R.id.btn_weex);
-        btnweex.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_weex).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                dynamicModuleInstaller.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                WeexDeeplinkHandler.getInstance().loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
 
@@ -47,6 +51,48 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
                 startActivity(intent);
+            }
+        });
+
+
+
+
+        findViewById(R.id.btn_listener_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, " onClick Display dialog");
+                if (WeexDeeplinkHandler.getInstance().isInstalled(MainActivity.this,DYNAMIC_MODULE_WEEX_NAME)){
+                    Button btnShow = new Button(MainActivity.this);
+                    btnShow.setText("Button from base app");
+                    WeexDeeplinkHandler.getInstance().sendSingletonViewToDDF(btnShow, new WeakReference<Activity>(MainActivity.this));
+                }else{
+                    WeexDeeplinkHandler.getInstance().loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                }
+            }
+        });
+
+        findViewById(R.id.btn_listener_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, " onClick Toast display");
+                if (WeexDeeplinkHandler.getInstance().isInstalled(MainActivity.this,DYNAMIC_MODULE_WEEX_NAME)){
+                    WeexDeeplinkHandler.getInstance().sendSingletonMessageToDDF("Hey weexsdk DD i am from base app", MainActivity.this);
+                }else{
+                    WeexDeeplinkHandler.getInstance().loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                }
+            }
+        });
+
+        findViewById(R.id.btn_listener_3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, " onClick Activity passing ");
+                if (WeexDeeplinkHandler.getInstance().isInstalled(MainActivity.this,DYNAMIC_MODULE_WEEX_NAME)){
+                    WeexDeeplinkHandler.getInstance().sendSingletonActivityInstance(new WeakReference<Activity>(MainActivity.this));
+                }else{
+                    WeexDeeplinkHandler.getInstance().loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                }
             }
         });
     }

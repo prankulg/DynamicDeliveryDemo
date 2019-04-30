@@ -6,6 +6,7 @@ import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
@@ -94,6 +95,12 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Sp
                         Log.i(TAG, "loader activity not active");
 
                     }
+
+                    String listener=resultIntent.getStringExtra("listener");
+                    if (!TextUtils.isEmpty(listener)){
+                        initializeListener(listener);
+                    }
+
                     break;
                 case SplitInstallSessionStatus.INSTALLING:
                     Log.i(TAG, "onStateUpdate initModule " + initModule + " installing");
@@ -107,6 +114,23 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Sp
         }
 
     }
+
+    /***
+     *
+     * @param listenerClasspath
+     */
+    private void initializeListener(String listenerClasspath){
+        try {
+            Class.forName(listenerClasspath).newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
