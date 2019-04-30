@@ -47,8 +47,8 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Sp
         mContext = CommonDynamicLoaderActivity.this;
         mInstallManager = SplitInstallManagerFactory.create(this);
         resultIntent = getIntent();
-        initActivity = resultIntent.getStringExtra(DynamicModuleInstaller.EXTRA_INIT_ACTIVITY);
-        initModule = resultIntent.getStringExtra(DynamicModuleInstaller.EXTRA_INIT_MODULE);
+        initActivity = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_ACTIVITY);
+        initModule = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_MODULE);
 
         //initiating module installation
         installModule();
