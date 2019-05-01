@@ -28,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DynamicModuleManager dynamicModuleManager = DynamicModuleManager.getInstance();
+        findViewById(R.id.btn_launch_download_modules_controller).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Button btnTap = findViewById(R.id.btn_tap);
         btnTap.setOnClickListener(new View.OnClickListener() {
@@ -45,17 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 dynamicModuleManager.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
-
-        findViewById(R.id.btn_launch_download_modules_controller).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
 
         findViewById(R.id.btn_listener_1).setOnClickListener(new View.OnClickListener() {
             @Override

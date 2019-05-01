@@ -7,9 +7,16 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btn_launch_download_modules_controller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dynamic Delivery Modules Controller" />
+
+    <Button
         android:id="@+id/btn_tap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/btn_launch_download_modules_controller"
         android:text="Tap On Me Please" />
 
     <Button
@@ -21,18 +28,10 @@
         android:text="Weex SDK"/>
 
     <Button
-        android:id="@+id/btn_launch_download_modules_controller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_weex"
-        android:text="Dynamic Delivery Modules Controller" />
-
-
-    <Button
         android:id="@+id/btn_listener_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_launch_download_modules_controller"
+        android:layout_below="@id/btn_weex"
         android:text="Display dialog" />
 
     <Button
@@ -42,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_listener_1"
         android:text="Display toast"/>
-
 
     <Button
         android:id="@+id/btn_listener_3"
