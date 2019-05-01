@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DynamicModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
-    private ArrayList<ModuleItem> mArrayList;
+    private ArrayList<DynamicModuleItem> mArrayList;
     private ItemClickListener mItemClickListener;
 
-    public ModulesAdapter(Context context, ArrayList<ModuleItem> modulesArrayList, ItemClickListener itemClickListener) {
+    public DynamicModulesAdapter(Context context, ArrayList<DynamicModuleItem> modulesArrayList, ItemClickListener itemClickListener) {
         mContext = context;
         mArrayList = modulesArrayList;
         mItemClickListener = itemClickListener;
@@ -45,8 +45,8 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    public void setNewData(ArrayList<ModuleItem> moduleItemArrayList){
-        mArrayList = moduleItemArrayList;
+    public void setNewData(ArrayList<DynamicModuleItem> dynamicModuleItemArrayList){
+        mArrayList = dynamicModuleItemArrayList;
         notifyDataSetChanged();
     }
 

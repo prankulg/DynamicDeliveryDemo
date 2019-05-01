@@ -3,16 +3,16 @@ package com.test.dynamictest;
 /**
  * Created by prankul.garg on 26/04/19.
  */
-public class ModuleItem {
+public class DynamicModuleItem {
     private String name;
     private boolean isInstalled;
 
-    public ModuleItem(String name, boolean isInstalled) {
+    public DynamicModuleItem(String name, boolean isInstalled) {
         this.name = name;
         this.isInstalled = isInstalled;
     }
 
-    public ModuleItem(String name) {
+    public DynamicModuleItem(String name) {
         this.name = name;
         this.isInstalled = false;
     }

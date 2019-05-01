@@ -36,7 +36,7 @@ public class DynamicModuleManager {
     private boolean isAnyActiveSession;      //if any module is downloading
     private PriorityQueue<String> mQueue;    //Queue of all requested modules
 
-    private ArrayList<ModuleItem> modulesArrayList;
+    private ArrayList<DynamicModuleItem> modulesArrayList;
     private SplitInstallManager mSplitInstallManager;
 
     private static DynamicModuleManager sInstance;
@@ -54,11 +54,11 @@ public class DynamicModuleManager {
 
         //List of all DFMs
         modulesArrayList = new ArrayList<>();
-        modulesArrayList.add(new ModuleItem("dynamic_feature"));
-        modulesArrayList.add(new ModuleItem("weexsdk"));
-        modulesArrayList.add(new ModuleItem("dynamic_feature1"));
-        modulesArrayList.add(new ModuleItem("dynamic_feature2"));
-        modulesArrayList.add(new ModuleItem("dynamic_feature3"));
+        modulesArrayList.add(new DynamicModuleItem("dynamic_feature"));
+        modulesArrayList.add(new DynamicModuleItem("weexsdk"));
+        modulesArrayList.add(new DynamicModuleItem("dynamic_feature1"));
+        modulesArrayList.add(new DynamicModuleItem("dynamic_feature2"));
+        modulesArrayList.add(new DynamicModuleItem("dynamic_feature3"));
 
         init();
     }
@@ -141,20 +141,20 @@ public class DynamicModuleManager {
         installModuleIfPending();
     }
 
-    public ArrayList<ModuleItem> getModulesArrayList() {
+    public ArrayList<DynamicModuleItem> getModulesArrayList() {
         Set<String> installedModules = mSplitInstallManager.getInstalledModules();
         log("installedModules size: " + installedModules.size());
 
-        for (ModuleItem moduleItem : modulesArrayList) {
-            moduleItem.setInstalled(installedModules.contains(moduleItem.getName()));
-            log("install status of " + moduleItem.getName() + " :" + moduleItem.isInstalled());
+        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
+            dynamicModuleItem.setInstalled(installedModules.contains(dynamicModuleItem.getName()));
+            log("install status of " + dynamicModuleItem.getName() + " :" + dynamicModuleItem.isInstalled());
         }
         return modulesArrayList;
     }
 
     public void startInstallAll() {
-        for (ModuleItem moduleItem : modulesArrayList) {
-            addInQueue(moduleItem.getName());
+        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
+            addInQueue(dynamicModuleItem.getName());
         }
         installModuleIfPending();
     }
@@ -231,8 +231,8 @@ public class DynamicModuleManager {
 
     public void deferredInstallAll() {
         ArrayList<String> list = new ArrayList<>();
-        for (ModuleItem moduleItem : modulesArrayList) {
-            list.add(moduleItem.getName());
+        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
+            list.add(dynamicModuleItem.getName());
         }
         mSplitInstallManager.deferredInstall(list);
     }
@@ -251,8 +251,8 @@ public class DynamicModuleManager {
 
     public void deferredUninstallAll() {
         ArrayList<String> list = new ArrayList<>();
-        for (ModuleItem moduleItem : modulesArrayList) {
-            list.add(moduleItem.getName());
+        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
+            list.add(dynamicModuleItem.getName());
         }
         mSplitInstallManager.deferredUninstall(list);
     }

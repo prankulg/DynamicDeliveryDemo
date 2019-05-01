@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class DynamicDeliveryControlActivity extends AppCompatActivity implements DynamicModuleManager.Listener {
     private static final String TAG = "PlayCore";
-    private ModulesAdapter modulesAdapter;
+    private DynamicModulesAdapter dynamicModulesAdapter;
     private DynamicModuleManager dynamicModuleManager;
     private boolean isDefferedInstallEnabled;
     private TextView tvStatus;
@@ -40,7 +40,7 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         tvStatus = findViewById(R.id.tv_status);
 
         dynamicModuleManager = DynamicModuleManager.getInstance();
-        modulesAdapter = new ModulesAdapter(this, dynamicModuleManager.getModulesArrayList(), new ModulesAdapter.ItemClickListener() {
+        dynamicModulesAdapter = new DynamicModulesAdapter(this, dynamicModuleManager.getModulesArrayList(), new DynamicModulesAdapter.ItemClickListener() {
             @Override
             public void onCheckedChangeListener(boolean isChecked, String moduleName) {
                 if (isChecked) {
@@ -56,7 +56,7 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
                 }
             }
         });
-        recyclerView.setAdapter(modulesAdapter);
+        recyclerView.setAdapter(dynamicModulesAdapter);
 
         Switch toggleDeferredInstall = findViewById(R.id.sw_toggle_deffered_install);
         toggleDeferredInstall.setChecked(isDefferedInstallEnabled);
@@ -83,10 +83,10 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 ArrayList<String> arrayList = new ArrayList<>();
-                ArrayList<ModuleItem> moduleItemArrayList = dynamicModuleManager.getModulesArrayList();
+                ArrayList<DynamicModuleItem> dynamicModuleItemArrayList = dynamicModuleManager.getModulesArrayList();
 
-                for (int i = 0; i < moduleItemArrayList.size(); i++) {
-                    arrayList.add(moduleItemArrayList.get(i).getName());
+                for (int i = 0; i < dynamicModuleItemArrayList.size(); i++) {
+                    arrayList.add(dynamicModuleItemArrayList.get(i).getName());
 
                     if (arrayList.size() == 2) {
                         break;
@@ -105,7 +105,7 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         findViewById(R.id.btn_refresh_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modulesAdapter.setNewData(dynamicModuleManager.getModulesArrayList());
+                dynamicModulesAdapter.setNewData(dynamicModuleManager.getModulesArrayList());
             }
         });
 
