@@ -2,6 +2,7 @@ package com.test.dynamictest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,8 +36,8 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     }
 
     private void startModuleActivity() {
-        String listener=resultIntent.getStringExtra("listener");
-        if (!TextUtils.isEmpty(listener)){
+        String listener = resultIntent.getStringExtra("listener");
+        if (!TextUtils.isEmpty(listener)) {
             initializeListener(listener);
         }
 
@@ -68,7 +69,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
      *
      * @param listenerClasspath
      */
-    private void initializeListener(String listenerClasspath){
+    private void initializeListener(String listenerClasspath) {
         try {
             Class.forName(listenerClasspath).newInstance();
         } catch (ClassNotFoundException e) {
@@ -130,15 +131,24 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     @Override
     public void onRequestFailed(int splitInstallErrorCode) {
         log("onRequestFailed: " + splitInstallErrorCode);
+        showRetry("Something went wrong! " + splitInstallErrorCode);
     }
 
     @Override
     public void onNetworkError() {
         log("onNetworkError");
+        showRetry("Check your internet connection.");
     }
 
     @Override
     public void onInsufficientStorage() {
         log("onInsufficientStorage");
+        showRetry("Insufficient Storage.");
+    }
+
+    private void showRetry(String message) {
+        Snackbar.make(findViewById(R.id.root), message, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Retry", v -> DynamicModuleManager.getInstance().startInstall(initModule))
+                .show();
     }
 }

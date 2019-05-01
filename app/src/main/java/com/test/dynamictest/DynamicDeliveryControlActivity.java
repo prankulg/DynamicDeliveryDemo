@@ -73,6 +73,7 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
                 if (isDefferedInstallEnabled) {
                     dynamicModuleManager.deferredInstallAll();
                 } else {
+                    tvStatus.setText("Starting install without client update");
                     dynamicModuleManager.startInstallAll();
                 }
             }
@@ -95,6 +96,7 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
                 if (isDefferedInstallEnabled) {
                     dynamicModuleManager.deferredInstall(arrayList);
                 } else {
+                    tvStatus.setText("Starting install without client update");
                     dynamicModuleManager.startInstall(arrayList);
                 }
             }

@@ -185,6 +185,9 @@ public class DynamicModuleManager {
     }
 
     private void installModuleIfPending() {
+        log("mQueue size: "+ mQueue.size());
+        log("isAnyActiveSession: "+ isAnyActiveSession);
+
         if (mQueue.isEmpty() || isAnyActiveSession) return;
 
         isAnyActiveSession = true;
@@ -222,8 +225,7 @@ public class DynamicModuleManager {
                             break;
                     }
 
-                    isAnyActiveSession = false;
-                    installModuleIfPending();
+                    resetSessionAndCheckForNext();
                 });
     }
 
