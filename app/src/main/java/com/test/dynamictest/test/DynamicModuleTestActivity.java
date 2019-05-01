@@ -115,6 +115,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
         findViewById(R.id.btn_refresh_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                modulesItemArrayList = DynamicModuleHelper.getModulesArrayList();
                 dynamicModulesAdapter.setNewData(modulesItemArrayList);
             }
         });
