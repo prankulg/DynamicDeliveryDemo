@@ -11,17 +11,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
 
 import java.util.HashSet;
 
-public class DynamicDeliveryControlActivity extends AppCompatActivity implements DynamicModuleInstaller.Listener {
+public class DynamicDeliveryControlActivity extends AppCompatActivity implements DynamicModuleManager.Listener {
     private static final String TAG = "PlayCore";
     private ModulesAdapter modulesAdapter;
-    private DynamicModuleInstaller dynamicModuleInstaller;
+    private DynamicModuleManager dynamicModuleManager;
     private boolean isDefferedInstallEnabled;
+    private TextView tvStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +38,22 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         RecyclerView recyclerView = findViewById(R.id.rv_modules);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
+        tvStatus = findViewById(R.id.tv_status);
 
-        dynamicModuleInstaller = new DynamicModuleInstaller(this);
-        modulesAdapter = new ModulesAdapter(this, dynamicModuleInstaller.getModulesArrayList(), new ModulesAdapter.ItemClickListener() {
+        dynamicModuleManager = DynamicModuleManager.getInstance(this);
+        modulesAdapter = new ModulesAdapter(this, dynamicModuleManager.getModulesArrayList(), new ModulesAdapter.ItemClickListener() {
             @Override
             public void onCheckedChangeListener(boolean isChecked, String moduleName) {
                 if (isChecked) {
                     if (isDefferedInstallEnabled){
-                        dynamicModuleInstaller.deferredInstall(moduleName);
+                        dynamicModuleManager.deferredInstall(moduleName);
                     } else {
-                        dynamicModuleInstaller.startInstall(moduleName);
+                        tvStatus.setText("");
+                        dynamicModuleManager.registerListener(DynamicDeliveryControlActivity.this, moduleName);
+                        dynamicModuleManager.startInstall(moduleName);
                     }
                 } else {
-                    dynamicModuleInstaller.deferredUninstall(moduleName);
+                    dynamicModuleManager.deferredUninstall(moduleName);
                 }
             }
         });
@@ -67,9 +72,9 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 if (isDefferedInstallEnabled){
-                    dynamicModuleInstaller.deferredInstallAll();
+                    dynamicModuleManager.deferredInstallAll();
                 } else {
-                    dynamicModuleInstaller.startInstallAll();
+                    dynamicModuleManager.startInstallAll();
                 }
             }
         });
@@ -77,20 +82,21 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         findViewById(R.id.btn_refresh_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modulesAdapter.setNewData(dynamicModuleInstaller.getModulesArrayList());
+                modulesAdapter.setNewData(dynamicModuleManager.getModulesArrayList());
             }
         });
 
         findViewById(R.id.btn_toggle_uninstall_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dynamicModuleInstaller.deferredUninstallAll();
+                dynamicModuleManager.deferredUninstallAll();
             }
         });
     }
 
     private void toastAndLog(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        tvStatus.setText(message);
         log(message);
     }
 
@@ -116,32 +122,72 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        dynamicModuleInstaller.unRegisterListener();
+        dynamicModuleManager.unRegisterListener();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        dynamicModuleInstaller.registerListener(this);
+        dynamicModuleManager.registerListener(this);
+    }
+
+    @Override
+    public void onRequestSuccess() {
+        toastAndLog("onRequestSuccess");
+    }
+
+    @Override
+    public void onRequestFailed(int splitInstallErrorCode) {
+        toastAndLog("onRequestFailed: " + splitInstallErrorCode);
     }
 
     @Override
     public void onDownloading(int downloadedPercentage) {
-        toastAndLog("Downloading... " + downloadedPercentage + "%");
+        toastAndLog("onDownloading: " + downloadedPercentage + "%");
     }
 
     @Override
-    public void onInstalled(HashSet<String> modules) {
-        toastAndLog("Installed: " + modules.toString());
+    public void onDownloaded() {
+        toastAndLog("onDownloaded");
     }
 
     @Override
-    public void onFailed(int splitInstallErrorCode) {
-        toastAndLog("Failed: " + splitInstallErrorCode);
+    public void onInstalling() {
+        toastAndLog("onInstalling");
+    }
+
+    @Override
+    public void onInstalled() {
+        toastAndLog("onInstalled");
+    }
+
+    @Override
+    public void onCancelling() {
+        toastAndLog("onCancelling");
     }
 
     @Override
     public void onCancelled() {
         toastAndLog("onCancelled");
+    }
+
+    @Override
+    public void onFailed() {
+        toastAndLog("onFailed");
+    }
+
+    @Override
+    public void onAlreadyActiveSession(String currentDownloadingModuleName) {
+        toastAndLog("onAlreadyActiveSession: " + currentDownloadingModuleName);
+    }
+
+    @Override
+    public void onNetworkError() {
+        toastAndLog("onNetworkError");
+    }
+
+    @Override
+    public void onInsufficientStorage() {
+        toastAndLog("onInsufficientStorage");
     }
 }

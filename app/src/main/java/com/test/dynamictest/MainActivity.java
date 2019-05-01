@@ -27,14 +27,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DynamicModuleInstaller dynamicModuleInstaller = new DynamicModuleInstaller(MainActivity.this);
+        DynamicModuleManager dynamicModuleManager = DynamicModuleManager.getInstance(MainActivity.this);
 
         Button btnTap = findViewById(R.id.btn_tap);
         btnTap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                dynamicModuleInstaller.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
+                dynamicModuleManager.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
             }
         });
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                WeexDeeplinkHandler.getInstance().loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                dynamicModuleManager.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
 
