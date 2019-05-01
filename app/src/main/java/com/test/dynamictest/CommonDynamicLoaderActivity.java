@@ -35,6 +35,11 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     }
 
     private void startModuleActivity() {
+        String listener=resultIntent.getStringExtra("listener");
+        if (!TextUtils.isEmpty(listener)){
+            initializeListener(listener);
+        }
+
         AnimationFactory.stopWalletLoader(mainLoaderView);
         // navigating to module init activity
         resultIntent.setClassName(BuildConfig.APPLICATION_ID, initActivity);
@@ -57,17 +62,6 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     protected void onPause() {
         DynamicModuleManager.getInstance().unRegisterListener();
         super.onPause();
-
-                    String listener=resultIntent.getStringExtra("listener");
-                    if (!TextUtils.isEmpty(listener)){
-                        initializeListener(listener);
-                    }
-
-    }
-
-    @Override
-    public void onRequestSuccess() {
-        log("onRequestSuccess");
     }
 
     /***
@@ -84,12 +78,6 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-    }
-
-
-    @Override
-    public void onRequestFailed(int splitInstallErrorCode) {
-        log("onRequestFailed: " + splitInstallErrorCode);
     }
 
     @Override
@@ -130,8 +118,18 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     }
 
     @Override
+    public void onRequestSuccess() {
+        log("onRequestSuccess");
+    }
+
+    @Override
     public void onAlreadyActiveSession(String currentDownloadingModuleName) {
         log("onAlreadyActiveSession" + currentDownloadingModuleName);
+    }
+
+    @Override
+    public void onRequestFailed(int splitInstallErrorCode) {
+        log("onRequestFailed: " + splitInstallErrorCode);
     }
 
     @Override

@@ -146,16 +146,6 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestSuccess() {
-        toastAndLog("onRequestSuccess");
-    }
-
-    @Override
-    public void onRequestFailed(int splitInstallErrorCode) {
-        toastAndLog("onRequestFailed: " + splitInstallErrorCode);
-    }
-
-    @Override
     public void onDownloading(int downloadedPercentage) {
         toastAndLog("onDownloading: " + downloadedPercentage + "%");
     }
@@ -191,8 +181,18 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onRequestSuccess() {
+        toastAndLog("onRequestSuccess");
+    }
+
+    @Override
     public void onAlreadyActiveSession(String currentDownloadingModuleName) {
         toastAndLog("onAlreadyActiveSession: " + currentDownloadingModuleName);
+    }
+
+    @Override
+    public void onRequestFailed(int splitInstallErrorCode) {
+        toastAndLog("onRequestFailed: " + splitInstallErrorCode);
     }
 
     @Override

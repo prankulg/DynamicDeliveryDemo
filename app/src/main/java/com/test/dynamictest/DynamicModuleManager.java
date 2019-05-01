@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by prankul.garg on 26/04/19.
  */
 public class DynamicModuleManager {
-    private static final String TAG = "PlayCore-DFMInstaller";
+    private static final String TAG = "PlayCore-DynamicManager";
 
     public static String EXTRA_INIT_ACTIVITY = "EXTRA_INIT_ACTIVITY";
     public static String EXTRA_INIT_MODULE = "EXTRA_INIT_MODULE";
@@ -287,7 +287,7 @@ public class DynamicModuleManager {
                         log("Active sessions count: " + task.getResult().size());
                         // Check for active sessions.
                         for (SplitInstallSessionState state : task.getResult()) {
-                            if (state.status() == SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION){
+                            if (state.status() == SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION) {
                                 log("Modules: " + state.moduleNames().toString() + " status: " + state.status() + " sessionId: " + state.sessionId());
 
                                 // Cancel the request, or request a deferred installation.
@@ -325,28 +325,64 @@ public class DynamicModuleManager {
     }
 
     public interface Listener {
-        void onRequestSuccess();
-
-        void onRequestFailed(int splitInstallErrorCode);
-
+        /**
+         * Request accepted and downloading starts
+         */
         void onDownloading(int downloadedPercentage);
 
+        /**
+         * Download completed
+         */
         void onDownloaded();
 
+        /**
+         * installation starts
+         */
         void onInstalling();
 
+        /**
+         * Installation completed
+         */
         void onInstalled();
 
+        /**
+         * User cancelled the request from notification or by some other medium
+         */
         void onCancelling();
 
+        /**
+         * Download cancelled
+         */
         void onCancelled();
 
+        /**
+         * Request accepted but failed to download
+         */
         void onFailed();
 
+        /**
+         * Request accepted
+         */
+        void onRequestSuccess();
+
+        /**
+         * Request accepted and added in queue
+         */
         void onAlreadyActiveSession(String currentDownloadingModuleName);
 
+        /**
+         * Request rejected
+         */
+        void onRequestFailed(int splitInstallErrorCode);
+
+        /**
+         * Request rejected
+         */
         void onNetworkError();
 
+        /**
+         * Request rejected
+         */
         void onInsufficientStorage();
     }
 }
