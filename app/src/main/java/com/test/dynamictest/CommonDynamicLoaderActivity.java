@@ -30,7 +30,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
         initActivity = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_ACTIVITY);
         initModule = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_MODULE);
 
-        DynamicModuleManager.getInstance(this).startInstall(initModule);
+        DynamicModuleManager.getInstance().startInstall(initModule);
     }
 
     private void startModuleActivity() {
@@ -49,12 +49,12 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     @Override
     protected void onResume() {
         super.onResume();
-        DynamicModuleManager.getInstance(this).registerListener(this, initModule);
+        DynamicModuleManager.getInstance().registerListener(this, initModule);
     }
 
     @Override
     protected void onPause() {
-        DynamicModuleManager.getInstance(this).unRegisterListener();
+        DynamicModuleManager.getInstance().unRegisterListener();
         super.onPause();
     }
 

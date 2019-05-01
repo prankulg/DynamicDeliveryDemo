@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DynamicModuleManager dynamicModuleManager = DynamicModuleManager.getInstance(MainActivity.this);
+        DynamicModuleManager dynamicModuleManager = DynamicModuleManager.getInstance();
 
         Button btnTap = findViewById(R.id.btn_tap);
         btnTap.setOnClickListener(new View.OnClickListener() {

@@ -12,11 +12,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class DynamicDeliveryControlActivity extends AppCompatActivity implements DynamicModuleManager.Listener {
     private static final String TAG = "PlayCore";
@@ -40,12 +39,12 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(llm);
         tvStatus = findViewById(R.id.tv_status);
 
-        dynamicModuleManager = DynamicModuleManager.getInstance(this);
+        dynamicModuleManager = DynamicModuleManager.getInstance();
         modulesAdapter = new ModulesAdapter(this, dynamicModuleManager.getModulesArrayList(), new ModulesAdapter.ItemClickListener() {
             @Override
             public void onCheckedChangeListener(boolean isChecked, String moduleName) {
                 if (isChecked) {
-                    if (isDefferedInstallEnabled){
+                    if (isDefferedInstallEnabled) {
                         dynamicModuleManager.deferredInstall(moduleName);
                     } else {
                         tvStatus.setText("");
@@ -71,10 +70,32 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
         findViewById(R.id.btn_toggle_install_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDefferedInstallEnabled){
+                if (isDefferedInstallEnabled) {
                     dynamicModuleManager.deferredInstallAll();
                 } else {
                     dynamicModuleManager.startInstallAll();
+                }
+            }
+        });
+
+        findViewById(R.id.btn_toggle_install_multiple).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> arrayList = new ArrayList<>();
+                ArrayList<ModuleItem> moduleItemArrayList = dynamicModuleManager.getModulesArrayList();
+
+                for (int i = 0; i < moduleItemArrayList.size(); i++) {
+                    arrayList.add(moduleItemArrayList.get(i).getName());
+
+                    if (arrayList.size() == 2) {
+                        break;
+                    }
+                }
+
+                if (isDefferedInstallEnabled) {
+                    dynamicModuleManager.deferredInstall(arrayList);
+                } else {
+                    dynamicModuleManager.startInstall(arrayList);
                 }
             }
         });
@@ -95,7 +116,6 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
     }
 
     private void toastAndLog(String message) {
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         tvStatus.setText(message);
         log(message);
     }
@@ -123,12 +143,6 @@ public class DynamicDeliveryControlActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         dynamicModuleManager.unRegisterListener();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        dynamicModuleManager.registerListener(this);
     }
 
     @Override

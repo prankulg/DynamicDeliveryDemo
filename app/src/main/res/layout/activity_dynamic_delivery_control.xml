@@ -30,10 +30,22 @@
             android:text="Install All" />
 
         <Button
+            android:id="@+id/btn_toggle_install_multiple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Install Multiple (First 2)" />
+
+        <Button
             android:id="@+id/btn_toggle_uninstall_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Uninstall All" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TIP: Multiple/All modules command will install modules one by one until user consent is not required and there will be no state update/callback for calling component."
+            android:padding="8dp"/>
 
         <Switch
             android:id="@+id/sw_toggle_deffered_install"
@@ -43,21 +55,23 @@
             android:padding="12dp"
             android:text="Enable Deffered install" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_modules"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
         <TextView
             android:id="@+id/tv_status"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#37000000"
             android:gravity="center"
+            android:layout_margin="8dp"
             android:padding="8dp"
             android:textSize="16sp"
             android:textColor="#000000"
             tools:text="Status"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_modules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
     </LinearLayout>
 </RelativeLayout>
