@@ -26,4 +26,29 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_weex"
         android:text="Dynamic Delivery Modules Controller" />
+
+
+    <Button
+        android:id="@+id/btn_listener_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_launch_download_modules_controller"
+        android:text="Display dialog" />
+
+    <Button
+        android:id="@+id/btn_listener_2"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_listener_1"
+        android:text="Display toast"/>
+
+
+    <Button
+        android:id="@+id/btn_listener_3"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_listener_2"
+        android:text="Pass Activity Instance"/>
 </RelativeLayout>

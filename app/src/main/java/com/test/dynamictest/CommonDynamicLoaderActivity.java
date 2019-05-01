@@ -3,6 +3,7 @@ package com.test.dynamictest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -56,12 +57,35 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     protected void onPause() {
         DynamicModuleManager.getInstance().unRegisterListener();
         super.onPause();
+
+                    String listener=resultIntent.getStringExtra("listener");
+                    if (!TextUtils.isEmpty(listener)){
+                        initializeListener(listener);
+                    }
+
     }
 
     @Override
     public void onRequestSuccess() {
         log("onRequestSuccess");
     }
+
+    /***
+     *
+     * @param listenerClasspath
+     */
+    private void initializeListener(String listenerClasspath){
+        try {
+            Class.forName(listenerClasspath).newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onRequestFailed(int splitInstallErrorCode) {
