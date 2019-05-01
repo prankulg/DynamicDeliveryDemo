@@ -24,7 +24,7 @@
 
 
         <activity
-            android:name=".DynamicDeliveryControlActivity"
+            android:name=".test.DynamicModuleTestActivity"
             android:label="@string/title_activity_dynamic_delivery_control"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

@@ -1,4 +1,4 @@
-package com.test.dynamictest;
+package com.test.dynamictest.test;
 
 /**
  * Created by prankul.garg on 26/04/19.

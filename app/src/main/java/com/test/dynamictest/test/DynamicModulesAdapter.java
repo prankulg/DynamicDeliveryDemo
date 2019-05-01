@@ -1,4 +1,4 @@
-package com.test.dynamictest;
+package com.test.dynamictest.test;
 
 
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.test.dynamictest.R;
 
 import java.util.ArrayList;
 

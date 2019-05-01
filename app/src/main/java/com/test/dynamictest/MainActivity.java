@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.test.dynamictest.test.DynamicModuleTestActivity;
+import com.test.dynamictest.test.DynamicModuleHelper;
 import com.test.dynamictest.weexsdk.WeexDeeplinkHandler;
 
 import java.lang.ref.WeakReference;
@@ -27,11 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DynamicModuleManager dynamicModuleManager = DynamicModuleManager.getInstance();
         findViewById(R.id.btn_launch_download_modules_controller).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DynamicDeliveryControlActivity.class);
+                Intent intent = new Intent(MainActivity.this, DynamicModuleTestActivity.class);
                 startActivity(intent);
             }
         });
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                dynamicModuleManager.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
+                DynamicModuleHelper.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_NAME, DYNAMIC_MODULE_ACTIVITY);
             }
         });
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "button clicked");
-                dynamicModuleManager.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
+                DynamicModuleHelper.loadAndLaunchModule(MainActivity.this, DYNAMIC_MODULE_WEEX_NAME, DYNAMIC_MODULE_WEEX_ACTIVITY);
             }
         });
 

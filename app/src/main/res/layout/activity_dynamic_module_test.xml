@@ -35,12 +35,6 @@
             android:layout_height="wrap_content"
             android:text="Install Multiple (First 2)" />
 
-        <Button
-            android:id="@+id/btn_toggle_uninstall_all"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Uninstall All" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

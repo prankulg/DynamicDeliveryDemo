@@ -1,8 +1,6 @@
 package com.test.dynamictest;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.util.Log;
 
@@ -26,9 +24,6 @@ import java.util.Set;
 public class DynamicModuleManager {
     private static final String TAG = "PlayCore-DynamicManager";
 
-    public static String EXTRA_INIT_ACTIVITY = "EXTRA_INIT_ACTIVITY";
-    public static String EXTRA_INIT_MODULE = "EXTRA_INIT_MODULE";
-
     private Context mContext;
     private Listener mListener;              //Client listener
     private String mModuleName = "";         //Module for which client want to listen
@@ -36,7 +31,6 @@ public class DynamicModuleManager {
     private boolean isAnyActiveSession;      //if any module is downloading
     private PriorityQueue<String> mQueue;    //Queue of all requested modules
 
-    private ArrayList<DynamicModuleItem> modulesArrayList;
     private SplitInstallManager mSplitInstallManager;
 
     private static DynamicModuleManager sInstance;
@@ -51,15 +45,6 @@ public class DynamicModuleManager {
     private DynamicModuleManager() {
         mContext = DynamicApplication.getAppContext();
         mQueue = new PriorityQueue<>();
-
-        //List of all DFMs
-        modulesArrayList = new ArrayList<>();
-        modulesArrayList.add(new DynamicModuleItem("dynamic_feature"));
-        modulesArrayList.add(new DynamicModuleItem("weexsdk"));
-        modulesArrayList.add(new DynamicModuleItem("dynamic_feature1"));
-        modulesArrayList.add(new DynamicModuleItem("dynamic_feature2"));
-        modulesArrayList.add(new DynamicModuleItem("dynamic_feature3"));
-
         init();
     }
 
@@ -141,24 +126,6 @@ public class DynamicModuleManager {
         installModuleIfPending();
     }
 
-    public ArrayList<DynamicModuleItem> getModulesArrayList() {
-        Set<String> installedModules = mSplitInstallManager.getInstalledModules();
-        log("installedModules size: " + installedModules.size());
-
-        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
-            dynamicModuleItem.setInstalled(installedModules.contains(dynamicModuleItem.getName()));
-            log("install status of " + dynamicModuleItem.getName() + " :" + dynamicModuleItem.isInstalled());
-        }
-        return modulesArrayList;
-    }
-
-    public void startInstallAll() {
-        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
-            addInQueue(dynamicModuleItem.getName());
-        }
-        installModuleIfPending();
-    }
-
     public void startInstall(ArrayList<String> modulesArrayList) {
         for (String moduleName : modulesArrayList) {
             addInQueue(moduleName);
@@ -185,8 +152,8 @@ public class DynamicModuleManager {
     }
 
     private void installModuleIfPending() {
-        log("mQueue size: "+ mQueue.size());
-        log("isAnyActiveSession: "+ isAnyActiveSession);
+        log("mQueue size: " + mQueue.size());
+        log("isAnyActiveSession: " + isAnyActiveSession);
 
         if (mQueue.isEmpty() || isAnyActiveSession) return;
 
@@ -229,14 +196,6 @@ public class DynamicModuleManager {
                 });
     }
 
-    public void deferredInstallAll() {
-        ArrayList<String> list = new ArrayList<>();
-        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
-            list.add(dynamicModuleItem.getName());
-        }
-        mSplitInstallManager.deferredInstall(list);
-    }
-
     public void deferredInstall(ArrayList<String> modulesArrayList) {
         mSplitInstallManager.deferredInstall(modulesArrayList);
     }
@@ -249,14 +208,6 @@ public class DynamicModuleManager {
         }
     }
 
-    public void deferredUninstallAll() {
-        ArrayList<String> list = new ArrayList<>();
-        for (DynamicModuleItem dynamicModuleItem : modulesArrayList) {
-            list.add(dynamicModuleItem.getName());
-        }
-        mSplitInstallManager.deferredUninstall(list);
-    }
-
     public void deferredUninstall(String name) {
         if (mSplitInstallManager.getInstalledModules().contains(name)) {
             ArrayList<String> list = new ArrayList<>();
@@ -265,19 +216,12 @@ public class DynamicModuleManager {
         }
     }
 
-    public void loadAndLaunchModule(Activity activity, String moduleName, String moduleActivity) {
-        if (mSplitInstallManager.getInstalledModules().contains(moduleName)) {
-            log("Module already installed");
-            Intent intent = new Intent();
-            intent.setClassName(activity, moduleActivity);
-            activity.startActivity(intent);
-        } else {
-            log("Module not installed, So need to install it first!");
-            Intent intent = new Intent(activity, CommonDynamicLoaderActivity.class);
-            intent.putExtra(EXTRA_INIT_ACTIVITY, moduleActivity);
-            intent.putExtra(EXTRA_INIT_MODULE, moduleName);
-            activity.startActivity(intent);
-        }
+    public Set<String> getInstalledModules() {
+        return mSplitInstallManager.getInstalledModules();
+    }
+
+    public boolean isInstalled(String moduleName) {
+        return mSplitInstallManager.getInstalledModules().contains(moduleName);
     }
 
     private void checkAndCancelExistingSessions() {

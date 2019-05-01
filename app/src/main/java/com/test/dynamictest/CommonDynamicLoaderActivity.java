@@ -14,6 +14,8 @@ import com.airbnb.lottie.LottieAnimationView;
 public class CommonDynamicLoaderActivity extends AppCompatActivity implements DynamicModuleManager.Listener {
 
     private static final String TAG = "PlayCore";
+    public static String EXTRA_INIT_ACTIVITY = "EXTRA_INIT_ACTIVITY";
+    public static String EXTRA_INIT_MODULE = "EXTRA_INIT_MODULE";
 
     private LottieAnimationView mainLoaderView;
     private TextView txtProgress;
@@ -29,8 +31,8 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
         mainLoaderView = findViewById(R.id.mainLoaderView);
         txtProgress = findViewById(R.id.progress);
         resultIntent = getIntent();
-        initActivity = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_ACTIVITY);
-        initModule = resultIntent.getStringExtra(DynamicModuleManager.EXTRA_INIT_MODULE);
+        initActivity = resultIntent.getStringExtra(EXTRA_INIT_ACTIVITY);
+        initModule = resultIntent.getStringExtra(EXTRA_INIT_MODULE);
 
         DynamicModuleManager.getInstance().startInstall(initModule);
     }
