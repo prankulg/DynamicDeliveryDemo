@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.test.dynamictest.test.DynamicModuleTestActivity;
-import com.test.dynamictest.test.DynamicModuleHelper;
 import com.test.dynamictest.weexsdk.WeexDeeplinkHandler;
 
 import java.lang.ref.WeakReference;

@@ -14,6 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.play.core.splitcompat.SplitCompat;
+import com.test.dynamictest.DynamicModuleHelper;
 import com.test.dynamictest.DynamicModuleManager;
 import com.test.dynamictest.R;
 
@@ -43,7 +44,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
         recyclerView.setLayoutManager(llm);
         tvStatus = findViewById(R.id.tv_status);
 
-        modulesItemArrayList = DynamicModuleHelper.getModulesArrayList();
+        modulesItemArrayList = getModulesArrayList();
         modulesStringArrayList = new ArrayList<>();
         for (DynamicModuleItem dynamicModuleItem : modulesItemArrayList) {
             modulesStringArrayList.add(dynamicModuleItem.getName());
@@ -57,7 +58,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
                     if (isDefferedInstallEnabled) {
                         dynamicModuleManager.deferredInstall(moduleName);
                     } else {
-                        tvStatus.setText("");
+                        tvStatus.setText("Status");
                         dynamicModuleManager.registerListener(DynamicModuleTestActivity.this, moduleName);
                         dynamicModuleManager.startInstall(moduleName);
                     }
@@ -115,10 +116,22 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
         findViewById(R.id.btn_refresh_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modulesItemArrayList = DynamicModuleHelper.getModulesArrayList();
+                tvStatus.setText("Status");
+                modulesItemArrayList = getModulesArrayList();
                 dynamicModulesAdapter.setNewData(modulesItemArrayList);
             }
         });
+    }
+
+    public static ArrayList<DynamicModuleItem> getModulesArrayList() {
+        ArrayList<String> modulesStringArrayList = DynamicModuleHelper.getAllDynamicModulesList();
+        ArrayList<DynamicModuleItem> modulesArrayList = new ArrayList<>();
+        for (String moduleName: modulesStringArrayList) {
+            DynamicModuleItem dynamicModuleItem = new DynamicModuleItem(moduleName);
+            dynamicModuleItem.setInstalled(DynamicModuleManager.getInstance().isInstalled(moduleName));
+            modulesArrayList.add(dynamicModuleItem);
+        }
+        return modulesArrayList;
     }
 
     private void toastAndLog(String message) {

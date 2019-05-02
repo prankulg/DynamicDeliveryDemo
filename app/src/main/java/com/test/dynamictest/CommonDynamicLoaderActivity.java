@@ -118,6 +118,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     @Override
     public void onFailed() {
         log("onFailed");
+        showRetry("onFailed");
     }
 
     @Override
@@ -127,7 +128,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
 
     @Override
     public void onAlreadyActiveSession(String currentDownloadingModuleName) {
-        log("onAlreadyActiveSession" + currentDownloadingModuleName);
+        log("Currently downloading " + currentDownloadingModuleName + "feature, so adding it in a queue");
     }
 
     @Override
