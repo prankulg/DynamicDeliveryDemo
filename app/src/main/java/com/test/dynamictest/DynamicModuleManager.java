@@ -127,6 +127,9 @@ public class DynamicModuleManager {
     }
 
     public void startInstall(ArrayList<String> modulesArrayList) {
+        if (!Utils.isNetworkAvailable(mContext)) return;
+        if (!DynamicModuleHelper.isEligibleToDownloadInBackground(mContext)) return;
+
         for (String moduleName : modulesArrayList) {
             addInQueue(moduleName);
         }
@@ -134,6 +137,13 @@ public class DynamicModuleManager {
     }
 
     public void startInstall(String name) {
+        if (!Utils.isNetworkAvailable(mContext)){
+            if (isAnyActivityToListen()){
+                mListener.onNetworkError();
+            }
+            return;
+        }
+
         //If some other module is getting downloaded then notify client
         if (isAnyActiveSession && mListener != null && !mModuleName.equalsIgnoreCase(mActiveModuleName)) {
             mListener.onAlreadyActiveSession(mActiveModuleName);

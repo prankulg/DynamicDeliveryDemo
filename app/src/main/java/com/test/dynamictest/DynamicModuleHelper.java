@@ -1,6 +1,7 @@
 package com.test.dynamictest;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import java.util.ArrayList;
@@ -32,5 +33,14 @@ public class DynamicModuleHelper {
             intent.putExtra(CommonDynamicLoaderActivity.EXTRA_INIT_MODULE, moduleName);
             activity.startActivity(intent);
         }
+    }
+
+    public static boolean isEligibleToDownloadInBackground(Context context){
+        long availableInternalMemorySizeInMB = DynamicModuleUtils.getAvailableInternalMemorySizeInMB();
+        int batteryPercentage = DynamicModuleUtils.getBatteryPercentage(context);
+        boolean isBatteryCharging = DynamicModuleUtils.isBatteryCharging(context);
+        boolean isFastInternet = DynamicModuleUtils.isFastInternetConnection(context);
+
+        return (availableInternalMemorySizeInMB >= 200 && (batteryPercentage >= 30 || isBatteryCharging) && isFastInternet);
     }
 }

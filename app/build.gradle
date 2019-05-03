@@ -5,10 +5,10 @@ android {
     defaultConfig {
         applicationId "com.test.dynamictest"
         multiDexEnabled true
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 28
-        versionCode 58
-        versionName "1.58"
+        versionCode 60
+        versionName "1.60"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
