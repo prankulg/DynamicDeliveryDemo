@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class DynamicModuleTestActivity extends AppCompatActivity implements DynamicModuleManager.Listener {
     private static final String TAG = "PlayCore";
-    private DynamicModulesAdapter dynamicModulesAdapter;
+    private DynamicModuleAdapter dynamicModuleAdapter;
     private DynamicModuleManager dynamicModuleManager;
     private boolean isDefferedInstallEnabled;
     private TextView tvStatus;
@@ -51,7 +51,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
         }
 
         dynamicModuleManager = DynamicModuleManager.getInstance();
-        dynamicModulesAdapter = new DynamicModulesAdapter(this, modulesItemArrayList, new DynamicModulesAdapter.ItemClickListener() {
+        dynamicModuleAdapter = new DynamicModuleAdapter(this, modulesItemArrayList, new DynamicModuleAdapter.ItemClickListener() {
             @Override
             public void onCheckedChangeListener(boolean isChecked, String moduleName) {
                 if (isChecked) {
@@ -67,7 +67,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
                 }
             }
         });
-        recyclerView.setAdapter(dynamicModulesAdapter);
+        recyclerView.setAdapter(dynamicModuleAdapter);
 
         Switch toggleDeferredInstall = findViewById(R.id.sw_toggle_deffered_install);
         toggleDeferredInstall.setChecked(isDefferedInstallEnabled);
@@ -118,7 +118,7 @@ public class DynamicModuleTestActivity extends AppCompatActivity implements Dyna
             public void onClick(View v) {
                 tvStatus.setText("Status");
                 modulesItemArrayList = getModulesArrayList();
-                dynamicModulesAdapter.setNewData(modulesItemArrayList);
+                dynamicModuleAdapter.setNewData(modulesItemArrayList);
             }
         });
     }

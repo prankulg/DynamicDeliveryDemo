@@ -15,12 +15,12 @@ import com.test.dynamictest.R;
 
 import java.util.ArrayList;
 
-public class DynamicModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DynamicModuleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private ArrayList<DynamicModuleItem> mArrayList;
     private ItemClickListener mItemClickListener;
 
-    public DynamicModulesAdapter(Context context, ArrayList<DynamicModuleItem> modulesArrayList, ItemClickListener itemClickListener) {
+    public DynamicModuleAdapter(Context context, ArrayList<DynamicModuleItem> modulesArrayList, ItemClickListener itemClickListener) {
         mContext = context;
         mArrayList = modulesArrayList;
         mItemClickListener = itemClickListener;
