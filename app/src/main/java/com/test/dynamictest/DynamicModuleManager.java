@@ -168,8 +168,11 @@ public class DynamicModuleManager {
                     }
                 })
                 .addOnFailureListener(exception -> {
-                    int errorCode = ((SplitInstallException) exception).getErrorCode();
-                    log("onFailure: " + errorCode);
+                    int errorCode = SplitInstallErrorCode.NO_ERROR;
+                    if (exception instanceof SplitInstallException){
+                        errorCode = ((SplitInstallException) exception).getErrorCode();
+                    }
+                    log("onFailure:: errorCode: " + errorCode);
 
                     switch (errorCode) {
                         case SplitInstallErrorCode.NETWORK_ERROR:

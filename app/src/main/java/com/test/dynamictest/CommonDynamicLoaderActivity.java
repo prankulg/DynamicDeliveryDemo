@@ -86,7 +86,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
     @Override
     public void onDownloading(int downloadedPercentage) {
         AnimationFactory.startWalletLoader(mainLoaderView);
-        log("onDownloading: " + downloadedPercentage);
+        log("onDownloading: " + downloadedPercentage + "%");
     }
 
     @Override
