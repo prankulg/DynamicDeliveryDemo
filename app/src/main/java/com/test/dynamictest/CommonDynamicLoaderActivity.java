@@ -34,6 +34,7 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
         initActivity = resultIntent.getStringExtra(EXTRA_INIT_ACTIVITY);
         initModule = resultIntent.getStringExtra(EXTRA_INIT_MODULE);
 
+        DynamicModuleManager.getInstance().registerListener(this, initModule);
         DynamicModuleManager.getInstance().startInstall(initModule);
     }
 
