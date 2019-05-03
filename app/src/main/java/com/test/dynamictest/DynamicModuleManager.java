@@ -2,6 +2,7 @@ package com.test.dynamictest;
 
 import android.content.Context;
 import android.content.IntentSender;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.play.core.splitinstall.SplitInstallException;
@@ -138,6 +139,8 @@ public class DynamicModuleManager {
 
     public void startInstall(String name) {
         if (!Utils.isNetworkAvailable(mContext)){
+            log("isNetworkAvailable: " + false);
+            log("isAnyActivityToListen: " + isAnyActivityToListen());
             if (isAnyActivityToListen()){
                 mListener.onNetworkError();
             }
@@ -145,7 +148,7 @@ public class DynamicModuleManager {
         }
 
         //If some other module is getting downloaded then notify client
-        if (isAnyActiveSession && mListener != null && !mModuleName.equalsIgnoreCase(mActiveModuleName)) {
+        if (isAnyActiveSession && mListener != null && !TextUtils.isEmpty(mModuleName) && !TextUtils.isEmpty(mActiveModuleName) && !mModuleName.equalsIgnoreCase(mActiveModuleName)) {
             mListener.onAlreadyActiveSession(mActiveModuleName);
         }
 
@@ -270,7 +273,10 @@ public class DynamicModuleManager {
 //        Don't have 'splitInstallSessionState' in case of 'requestFailure'
 //        HashSet<String> modules = new HashSet<>(splitInstallSessionState.moduleNames());
 //        return (mListener != null && modules.contains(mModuleName));
-        return (mListener != null && mModuleName.equalsIgnoreCase(mActiveModuleName));
+        log("mListener != null: " + (mListener != null));
+        log("mModuleName: " + mModuleName);
+        log("mActiveModuleName: " + mActiveModuleName);
+        return (mListener != null && !TextUtils.isEmpty(mModuleName) && (TextUtils.isEmpty(mActiveModuleName) || mModuleName.equalsIgnoreCase(mActiveModuleName)));
     }
 
     public void registerListener(Listener listener, String moduleName) {

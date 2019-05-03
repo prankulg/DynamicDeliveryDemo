@@ -57,8 +57,8 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
 
     @Override
     protected void onResume() {
-        super.onResume();
         DynamicModuleManager.getInstance().registerListener(this, initModule);
+        super.onResume();
     }
 
     @Override
