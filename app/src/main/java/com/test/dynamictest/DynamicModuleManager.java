@@ -38,7 +38,11 @@ public class DynamicModuleManager {
 
     public static DynamicModuleManager getInstance() {
         if (sInstance == null) {
-            sInstance = new DynamicModuleManager();
+            synchronized (DynamicModuleManager.class){
+                if (sInstance == null){
+                    sInstance = new DynamicModuleManager();
+                }
+            }
         }
         return sInstance;
     }
@@ -129,7 +133,6 @@ public class DynamicModuleManager {
 
     public void startInstall(ArrayList<String> modulesArrayList) {
         if (!Utils.isNetworkAvailable(mContext)) return;
-        if (!DynamicModuleHelper.isEligibleToDownloadInBackground(mContext)) return;
 
         for (String moduleName : modulesArrayList) {
             addInQueue(moduleName);

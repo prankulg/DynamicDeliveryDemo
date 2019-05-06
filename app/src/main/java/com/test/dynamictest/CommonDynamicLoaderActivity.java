@@ -124,12 +124,12 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
 
     @Override
     public void onRequestSuccess() {
-        log("onRequestSuccess");
+        log("onRequestSuccess: Download will start soon.");
     }
 
     @Override
     public void onAlreadyActiveSession(String currentDownloadingModuleName) {
-        log("Currently downloading " + currentDownloadingModuleName + "feature, so adding it in a queue");
+        log("Currently downloading " + currentDownloadingModuleName + " feature, so adding it in a queue");
     }
 
     @Override
