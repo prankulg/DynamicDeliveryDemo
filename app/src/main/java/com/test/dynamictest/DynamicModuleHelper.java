@@ -24,6 +24,20 @@ public class DynamicModuleHelper {
         return modulesArrayList;
     }
 
+    public static void startInitialBackgroundInstall(){
+        if (!isEligibleToDownloadInBackground()) return;
+
+        ArrayList<String> modulesArrayList = new ArrayList<>();
+        modulesArrayList.add("dynamic_feature2");
+        DynamicModuleManager.getInstance().startInstall(modulesArrayList);
+    }
+
+    public static void startInitialDeferredInstall(){
+        ArrayList<String> modulesArrayList = new ArrayList<>();
+        modulesArrayList.add("dynamic_feature3");
+        DynamicModuleManager.getInstance().deferredInstall(modulesArrayList);
+    }
+
     public static void loadAndLaunchModule(Activity activity, String moduleName, String moduleActivity) {
         if (DynamicModuleManager.getInstance().isInstalled(moduleName)) {
             Intent intent = new Intent();
@@ -37,7 +51,8 @@ public class DynamicModuleHelper {
         }
     }
 
-    public static boolean isEligibleToDownloadInBackground(Context context){
+    public static boolean isEligibleToDownloadInBackground(){
+        Context context = DynamicApplication.getAppContext();
         long availableInternalMemorySizeInMB = DynamicModuleUtils.getAvailableInternalMemorySizeInMB();
         int batteryPercentage = DynamicModuleUtils.getBatteryPercentage(context);
         boolean isBatteryCharging = DynamicModuleUtils.isBatteryCharging(context);
