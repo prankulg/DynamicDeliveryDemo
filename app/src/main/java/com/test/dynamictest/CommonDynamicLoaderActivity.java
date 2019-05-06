@@ -46,8 +46,10 @@ public class CommonDynamicLoaderActivity extends AppCompatActivity implements Dy
 
         AnimationFactory.stopWalletLoader(mainLoaderView);
         // navigating to module init activity
-        resultIntent.setClassName(BuildConfig.APPLICATION_ID, initActivity);
-        startActivity(resultIntent);
+        if (!TextUtils.isEmpty(initActivity)) {
+            resultIntent.setClassName(BuildConfig.APPLICATION_ID, initActivity);
+            startActivity(resultIntent);
+        }
         finish();
     }
 

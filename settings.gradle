@@ -1,4 +1,4 @@
-include ':app'
+include ':app', ':dynamic_picaso', ':dynamic_nested'
 include ':library1'
 include ':dynamic_feature'
 include ':weexsdk'

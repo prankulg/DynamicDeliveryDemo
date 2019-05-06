@@ -18,5 +18,7 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="title_activity_dynamic_delivery_control">DynamicDeliveryControlActivity</string>
+    <string name="title_dynamic_picaso">Module Title</string>
+    <string name="title_dynamic_nested">Module Title</string>
 
 </resources>

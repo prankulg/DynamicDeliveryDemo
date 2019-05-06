@@ -21,11 +21,11 @@
 
     <Button
         android:id="@+id/btn_weex"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_tap"
-        android:text="Weex SDK"/>
+        android:layout_centerInParent="true"
+        android:text="Weex SDK" />
 
     <Button
         android:id="@+id/btn_listener_1"
@@ -36,17 +36,33 @@
 
     <Button
         android:id="@+id/btn_listener_2"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_listener_1"
-        android:text="Display toast"/>
+        android:layout_centerInParent="true"
+        android:text="Display toast" />
 
     <Button
         android:id="@+id/btn_listener_3"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_listener_2"
-        android:text="Pass Activity Instance"/>
+        android:layout_centerInParent="true"
+        android:text="Pass Activity Instance" />
+
+    <Button
+        android:id="@+id/picso_dd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_listener_3"
+        android:layout_centerInParent="true"
+        android:text="Picaso DD" />
+
+    <Button
+        android:id="@+id/nested_dd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/picso_dd"
+        android:layout_centerInParent="true"
+        android:text="Nested DD" />
 </RelativeLayout>

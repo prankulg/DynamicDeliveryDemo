@@ -73,6 +73,18 @@ public class WeexDeeplinkHandler {
         }
     }
 
+    public void loadModule(Activity activity, String moduleName) {
+        SplitInstallManager mSplitInstallManager = SplitInstallManagerFactory.create(activity.getApplicationContext());
+        if (mSplitInstallManager.getInstalledModules().contains(moduleName)) {
+
+        } else {
+            Log.i("POC","module " + moduleName +" not installed");
+            Intent intent = new Intent(activity, CommonDynamicLoaderActivity.class);
+            intent.putExtra(EXTRA_INIT_MODULE, moduleName);
+            activity.startActivity(intent);
+        }
+    }
+
     public boolean isInstalled(Context context,String moduleName){
         SplitInstallManager mSplitInstallManager = SplitInstallManagerFactory.create(context);
         return mSplitInstallManager.getInstalledModules().contains(moduleName);
