@@ -19,6 +19,8 @@ public class DynamicModuleHelper {
         modulesArrayList.add("dynamic_feature1");
         modulesArrayList.add("dynamic_feature2");
         modulesArrayList.add("dynamic_feature3");
+        modulesArrayList.add("dynamic_picaso");
+        modulesArrayList.add("dynamic_nested");
         return modulesArrayList;
     }
 
