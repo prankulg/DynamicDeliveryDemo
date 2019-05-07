@@ -15,8 +15,8 @@ import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode;
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus;
 import com.google.android.play.core.tasks.OnSuccessListener;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
@@ -30,7 +30,7 @@ public class DynamicModuleManager {
     private String mModuleName = "";         //Module for which client want to listen
     private String mActiveModuleName = null; //Current downloading module
     private boolean isAnyActiveSession;      //if any module is downloading
-    private PriorityQueue<String> mQueue;    //Queue of all requested modules
+    private ArrayDeque<String> mDeQueue;    //Queue of all requested modules
 
     private SplitInstallManager mSplitInstallManager;
 
@@ -49,7 +49,7 @@ public class DynamicModuleManager {
 
     private DynamicModuleManager() {
         mContext = DynamicApplication.getAppContext();
-        mQueue = new PriorityQueue<>();
+        mDeQueue = new ArrayDeque<>();
         init();
     }
 
@@ -59,20 +59,20 @@ public class DynamicModuleManager {
             log("onStateUpdate: " + splitInstallSessionState.toString());
             switch (splitInstallSessionState.status()) {
                 case SplitInstallSessionStatus.DOWNLOADING:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         int percent = (int) (100 * splitInstallSessionState.bytesDownloaded() / splitInstallSessionState.totalBytesToDownload());
                         mListener.onDownloading(percent);
                     }
                     break;
 
                 case SplitInstallSessionStatus.DOWNLOADED:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onDownloaded();
                     }
                     break;
 
                 case SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         try {
                             mContext.startIntentSender(splitInstallSessionState.resolutionIntent().getIntentSender(), null, 0, 0, 0);
                         } catch (IntentSender.SendIntentException e) {
@@ -86,14 +86,14 @@ public class DynamicModuleManager {
                     break;
 
                 case SplitInstallSessionStatus.INSTALLING:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onInstalling();
                     }
                     break;
 
                 case SplitInstallSessionStatus.INSTALLED:
                     SplitInstallHelper.updateAppInfo(mContext.getApplicationContext());
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onInstalled();
                     }
 
@@ -101,7 +101,7 @@ public class DynamicModuleManager {
                     break;
 
                 case SplitInstallSessionStatus.FAILED:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onFailed();
                     }
 
@@ -109,13 +109,13 @@ public class DynamicModuleManager {
                     break;
 
                 case SplitInstallSessionStatus.CANCELING:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onCancelling();
                     }
                     break;
 
                 case SplitInstallSessionStatus.CANCELED:
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onCancelled();
                     }
 
@@ -135,7 +135,7 @@ public class DynamicModuleManager {
         if (!Utils.isNetworkAvailable(mContext)) return;
 
         for (String moduleName : modulesArrayList) {
-            addInQueue(moduleName);
+            addInQueue(moduleName, false);
         }
         installModuleIfPending();
     }
@@ -143,8 +143,7 @@ public class DynamicModuleManager {
     public void startInstall(String name) {
         if (!Utils.isNetworkAvailable(mContext)){
             log("isNetworkAvailable: " + false);
-            log("isAnyActivityToListen: " + isAnyActivityToListen());
-            if (isAnyActivityToListen()){
+            if (isAnyoneToListen()){
                 mListener.onNetworkError();
             }
             return;
@@ -155,31 +154,35 @@ public class DynamicModuleManager {
             mListener.onAlreadyActiveSession(mActiveModuleName);
         }
 
-        addInQueue(name);
+        addInQueue(name, true);
         installModuleIfPending();
     }
 
-    private void addInQueue(String moduleName) {
+    private void addInQueue(String moduleName, boolean isOnDemand) {
         if (!mSplitInstallManager.getInstalledModules().contains(moduleName)
-                && !mQueue.contains(moduleName)
+                && !mDeQueue.contains(moduleName)
                 && !moduleName.equalsIgnoreCase(mActiveModuleName)) {
-            mQueue.add(moduleName);
+            if (isOnDemand){
+                mDeQueue.addFirst(moduleName);
+            } else {
+                mDeQueue.addLast(moduleName);
+            }
         }
     }
 
     private void installModuleIfPending() {
-        log("mQueue size: " + mQueue.size());
+        log("mDeQueue size: " + mDeQueue.size());
         log("isAnyActiveSession: " + isAnyActiveSession);
 
-        if (mQueue.isEmpty() || isAnyActiveSession) return;
+        if (mDeQueue.isEmpty() || isAnyActiveSession) return;
 
         isAnyActiveSession = true;
-        mActiveModuleName = mQueue.poll();
+        mActiveModuleName = mDeQueue.poll();
         SplitInstallRequest splitInstallRequest = SplitInstallRequest.newBuilder().addModule(mActiveModuleName).build();
         mSplitInstallManager.startInstall(splitInstallRequest)
                 .addOnSuccessListener(o -> {
                     log("onSuccess");
-                    if (isAnyActivityToListen()) {
+                    if (isAnyoneToListen()) {
                         mListener.onRequestSuccess();
                     }
                 })
@@ -192,20 +195,20 @@ public class DynamicModuleManager {
 
                     switch (errorCode) {
                         case SplitInstallErrorCode.NETWORK_ERROR:
-                            if (isAnyActivityToListen()) {
+                            if (isAnyoneToListen()) {
                                 mListener.onNetworkError();
                             }
                             break;
 
 
                         case SplitInstallErrorCode.INSUFFICIENT_STORAGE:
-                            if (isAnyActivityToListen()) {
+                            if (isAnyoneToListen()) {
                                 mListener.onInsufficientStorage();
                             }
                             break;
 
                         default:
-                            if (isAnyActivityToListen()) {
+                            if (isAnyoneToListen()) {
                                 mListener.onRequestFailed(errorCode);
                             }
                             break;
@@ -252,14 +255,15 @@ public class DynamicModuleManager {
                         log("Active sessions count: " + task.getResult().size());
                         // Check for active sessions.
                         for (SplitInstallSessionState state : task.getResult()) {
-                            if (state.status() == SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION) {
-                                log("Modules: " + state.moduleNames().toString() + " status: " + state.status() + " sessionId: " + state.sessionId());
+                            log("Modules: " + state.moduleNames().toString() + " status: " + state.status() + " sessionId: " + state.sessionId());
 
+                            if (state.status() == SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION) {
                                 // Cancel the request, or request a deferred installation.
                                 mSplitInstallManager.cancelInstall(state.sessionId()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         log("cancelInstall - onSuccess: Modules: " + state.moduleNames().toString());
+                                        resetSessionAndCheckForNext();
                                     }
                                 });
                             }
@@ -272,7 +276,7 @@ public class DynamicModuleManager {
         Log.i(TAG, message);
     }
 
-    private boolean isAnyActivityToListen() {
+    private boolean isAnyoneToListen() {
 //        Don't have 'splitInstallSessionState' in case of 'requestFailure'
 //        HashSet<String> modules = new HashSet<>(splitInstallSessionState.moduleNames());
 //        return (mListener != null && modules.contains(mModuleName));
