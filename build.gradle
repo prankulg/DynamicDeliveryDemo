@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.google.com' }
         
     }
     dependencies {
@@ -18,8 +19,25 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven { url 'https://maven.google.com' }
+
+
+        [
+
+                'feed-android'
+        ].each {
+            def urlBuilder = "https://android-ci01.mypaytm.com:8040/artifactory/${it}"
+            maven {
+                url urlBuilder
+                credentials {
+                    username = "${artifactory_username}"
+                    password = "${artifactory_password}"
+                }
+            }
+        }
     }
+
+
 }
 
 task clean(type: Delete) {

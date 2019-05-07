@@ -31,7 +31,7 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         setSupportActionBar(toolbar);
 
         Log.i("POC", "WeexSdkInitActivity");
-        InitConfig config = new InitConfig.Builder().build();
+        InitConfig config = new InitConfig.Builder().setSoLoader(new SoLoader(this.getApplicationContext())).build();
         WXSDKEngine.initialize(getApplication(), config);
 
         initSDK(this);
