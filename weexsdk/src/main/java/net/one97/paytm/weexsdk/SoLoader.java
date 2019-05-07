@@ -22,7 +22,7 @@ public class SoLoader implements IWXSoLoaderAdapter {
 
 
         Log.i("POC", "before doLoadLibrary  shortName : " + shortName);
-        SplitInstallHelper.loadLibrary(mContex, name);
+        SplitInstallHelper.loadLibrary(mContex, shortName);
         Log.i("POC", "after doLoadLibrary: shortName " + shortName);
 
     }

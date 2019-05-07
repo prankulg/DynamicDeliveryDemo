@@ -45,5 +45,6 @@ task clean(type: Delete) {
 }
 ext {
     projectWeexSDKVersion = '0.20.0.2@aar'
+    projectDebuggable = false
 }
 
