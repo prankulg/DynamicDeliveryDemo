@@ -30,7 +30,7 @@ public class DynamicModuleManager {
     private String mModuleName = "";         //Module for which client want to listen
     private String mActiveModuleName = null; //Current downloading module
     private boolean isAnyActiveSession;      //if any module is downloading
-    private ArrayDeque<String> mDeQueue;    //Queue of all requested modules
+    private ArrayDeque<String> mDeque;    //Queue of all requested modules
 
     private SplitInstallManager mSplitInstallManager;
 
@@ -49,7 +49,7 @@ public class DynamicModuleManager {
 
     private DynamicModuleManager() {
         mContext = DynamicApplication.getAppContext();
-        mDeQueue = new ArrayDeque<>();
+        mDeque = new ArrayDeque<>();
         init();
     }
 
@@ -160,24 +160,24 @@ public class DynamicModuleManager {
 
     private void addInQueue(String moduleName, boolean isOnDemand) {
         if (!mSplitInstallManager.getInstalledModules().contains(moduleName)
-                && !mDeQueue.contains(moduleName)
+                && !mDeque.contains(moduleName)
                 && !moduleName.equalsIgnoreCase(mActiveModuleName)) {
             if (isOnDemand){
-                mDeQueue.addFirst(moduleName);
+                mDeque.addFirst(moduleName);
             } else {
-                mDeQueue.addLast(moduleName);
+                mDeque.addLast(moduleName);
             }
         }
     }
 
     private void installModuleIfPending() {
-        log("mDeQueue size: " + mDeQueue.size());
+        log("mDeque size: " + mDeque.size());
         log("isAnyActiveSession: " + isAnyActiveSession);
 
-        if (mDeQueue.isEmpty() || isAnyActiveSession) return;
+        if (mDeque.isEmpty() || isAnyActiveSession) return;
 
         isAnyActiveSession = true;
-        mActiveModuleName = mDeQueue.poll();
+        mActiveModuleName = mDeque.poll();
         SplitInstallRequest splitInstallRequest = SplitInstallRequest.newBuilder().addModule(mActiveModuleName).build();
         mSplitInstallManager.startInstall(splitInstallRequest)
                 .addOnSuccessListener(o -> {
