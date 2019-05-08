@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".WeexActivity"
-    tools:showIn="@layout/weexsdk_activity_main">
+    tools:showIn="@layout/weexsdk_activity_main"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="So File info "
+        android:textColor="#FF000000"
+        android:id="@+id/txt_sofile_name"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linear_continer"
+        android:orientation="vertical"
 
-</android.support.constraint.ConstraintLayout>
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weex Continer"
+            android:textColor="#FF000000"
+            android:id="@+id/txt_weex_log"
+            />
+    </LinearLayout>
+
+</LinearLayout>

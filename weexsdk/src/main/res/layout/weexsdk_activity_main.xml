@@ -20,6 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <include layout="@layout/weexsdk_content_main" />
 
     <android.support.design.widget.FloatingActionButton
