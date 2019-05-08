@@ -3,15 +3,18 @@ package com.test.dynamictest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.test.dynamictest.test.DynamicModuleTestActivity;
 import com.test.dynamictest.weexsdk.WeexDeeplinkHandler;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,10 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private static String DYNAMIC_MODULE_PICASO = "dynamic_picaso";
     private static String DYNAMIC_MODULE_NESTED = "dynamic_nested";
 
+    private TextView txtViewSoFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        txtViewSoFile = (TextView) findViewById(R.id.txt_so_file);
 
         findViewById(R.id.btn_launch_download_modules_controller).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,5 +121,30 @@ public class MainActivity extends AppCompatActivity {
                 WeexDeeplinkHandler.getInstance().loadModule(MainActivity.this, DYNAMIC_MODULE_PICASO);
             }
         });
+        getFileCount();
+    }
+
+
+    private void getFileCount() {
+        String pkgName = getApplicationContext().getPackageName();
+
+        String path = "/data/data/" + pkgName + "/lib";
+
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles();
+        if (listOfFiles != null) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("SO File:");
+
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    stringBuffer.append("\n" + listOfFiles[i].getName()+"  Size:"+(listOfFiles[i].length()/ 1024)+" kb");
+                }
+            }
+            txtViewSoFile.setText(stringBuffer);
+        } else {
+            txtViewSoFile.setText("SO File count: is null");
+        }
+
     }
 }
