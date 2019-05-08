@@ -65,4 +65,11 @@
         android:layout_below="@+id/picso_dd"
         android:layout_centerInParent="true"
         android:text="Nested DD" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_so_file"
+        android:text="SoFile Name:"
+        android:layout_below="@+id/nested_dd"
+        />
 </RelativeLayout>
