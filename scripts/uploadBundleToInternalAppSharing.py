@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #Refs: https://github.com/googlesamples/android-play-publisher-api/blob/master/v3/python/basic_upload_apks.py
-#Doc: https://docs.google.com/document/d/1tNitzRi6jDGCGW88SxYZquGBRzCrbs8wS6vGaCYATKA/edit
 
 """Uploads an Android App Bundle to the internal app sharing."""
 
